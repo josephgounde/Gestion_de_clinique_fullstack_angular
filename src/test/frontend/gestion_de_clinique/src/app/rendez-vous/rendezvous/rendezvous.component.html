@@ -1,0 +1,108 @@
+<app-header 
+    pageTitle="Gestion des Rendez-vous"
+    pageSubtitle="Ajouter, modifier ou supprimer des rendez-vous">
+</app-header>
+
+<div class="p-6 max-w-4xl mx-auto">
+  <h2 class="text-2xl font-bold text-gray-800 mb-6">Gestion des Rendez-vous</h2>
+  
+  <div class="flex gap-3 mb-5">
+    <input type="text" [(ngModel)]="search" placeholder="Rechercher un motif ou patient..." class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1fa183] focus:border-transparent" />
+    <button (click)="addRdv()" class="px-4 py-2 bg-[#1fa183] text-white rounded-lg hover:bg-[#168a73] transition-colors duration-200 font-medium">+ Nouveau RDV</button>
+  </div>
+
+  <table *ngIf="!showForm" class="w-full border-collapse bg-white rounded-lg overflow-hidden shadow-[0_2px_8px_rgba(31,161,131,0.08)]">
+    <thead>
+      <tr>
+        <th class="px-2 py-2.5 bg-[#e8f4f8] text-[#1fa183] text-left border-b border-gray-200">Patient ID</th>
+        <th class="px-2 py-2.5 bg-[#e8f4f8] text-[#1fa183] text-left border-b border-gray-200">Médecin ID</th>
+        <th class="px-2 py-2.5 bg-[#e8f4f8] text-[#1fa183] text-left border-b border-gray-200">Secrétaire ID</th>
+        <th class="px-2 py-2.5 bg-[#e8f4f8] text-[#1fa183] text-left border-b border-gray-200">Date début</th>
+        <th class="px-2 py-2.5 bg-[#e8f4f8] text-[#1fa183] text-left border-b border-gray-200">Date fin</th>
+        <th class="px-2 py-2.5 bg-[#e8f4f8] text-[#1fa183] text-left border-b border-gray-200">Motif</th>
+        <th class="px-2 py-2.5 bg-[#e8f4f8] text-[#1fa183] text-left border-b border-gray-200">Statut</th>
+        <th class="px-2 py-2.5 bg-[#e8f4f8] text-[#1fa183] text-left border-b border-gray-200">Salle</th>
+        <th class="px-2 py-2.5 bg-[#e8f4f8] text-[#1fa183] text-left border-b border-gray-200">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let r of filteredRdv" class="border-b border-gray-200 last:border-b-0">
+        <td class="px-2 py-2.5">{{ r.patientId }}</td>
+        <td class="px-2 py-2.5">{{ r.medecinId }}</td>
+        <td class="px-2 py-2.5">{{ r.secretaireId }}</td>
+        <td class="px-2 py-2.5">{{ r.dateHeureDebut | date:'dd/MM/yyyy HH:mm' }}</td>
+        <td class="px-2 py-2.5">{{ r.dateHeureFin | date:'dd/MM/yyyy HH:mm' }}</td>
+        <td class="px-2 py-2.5">{{ r.motif }}</td>
+        <td class="px-2 py-2.5">{{ r.statut }}</td>
+        <td class="px-2 py-2.5">{{ r.salle }}</td>
+        <td class="px-2 py-2.5">
+          <button (click)="editRdv(r)" class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors duration-200 text-sm mr-2">Modifier</button>
+          <button (click)="deleteRdv(r.id)" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-colors duration-200 text-sm">Annuler</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="showForm" class="bg-gray-50 rounded-lg p-5 shadow-[0_1px_4px_rgba(31,161,131,0.05)] max-w-md mx-auto">
+    <h3 class="text-lg font-semibold text-gray-800 mb-4">{{ isEdit ? 'Modifier' : 'Nouveau' }} rendez-vous</h3>
+
+    <label class="block mb-2.5" *ngIf="selectedRdv">
+      <span class="text-gray-700 font-medium">Patient ID :</span>
+      <input type="number" [(ngModel)]="selectedRdv.patientId" class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1fa183] focus:border-transparent" />
+    </label>
+    
+    <label class="block mb-2.5" *ngIf="selectedRdv">
+      <span class="text-gray-700 font-medium">Médecin ID :</span>
+      <input type="number" [(ngModel)]="selectedRdv.medecinId" class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1fa183] focus:border-transparent" />
+    </label>
+
+    <label class="block mb-2.5" *ngIf="selectedRdv">
+      <span class="text-gray-700 font-medium">Secrétaire ID :</span>
+      <input type="number" [(ngModel)]="selectedRdv.secretaireId" class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1fa183] focus:border-transparent" />
+    </label>
+
+    <label class="block mb-2.5" *ngIf="selectedRdv">
+      <span class="text-gray-700 font-medium">Date et heure début :</span>
+      <input type="datetime-local" [(ngModel)]="selectedRdv.dateHeureDebut" class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1fa183] focus:border-transparent" />
+    </label>
+
+    <label class="block mb-2.5" *ngIf="selectedRdv">
+      <span class="text-gray-700 font-medium">Date et heure fin :</span>
+      <input type="datetime-local" [(ngModel)]="selectedRdv.dateHeureFin" class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1fa183] focus:border-transparent" />
+    </label>
+
+    <label class="block mb-2.5" *ngIf="selectedRdv">
+      <span class="text-gray-700 font-medium">Date d'annulation (optionnel) :</span>
+      <input type="datetime-local" [(ngModel)]="selectedRdv.dateAnnulation" class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1fa183] focus:border-transparent" />
+    </label>
+    
+    <label class="block mb-2.5" *ngIf="selectedRdv">
+      <span class="text-gray-700 font-medium">Motif :</span>
+      <input [(ngModel)]="selectedRdv.motif" class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1fa183] focus:border-transparent" />
+    </label>
+
+    <label class="block mb-2.5" *ngIf="selectedRdv">
+      <span class="text-gray-700 font-medium">Statut :</span>
+      <select [(ngModel)]="selectedRdv.statut" class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1fa183] focus:border-transparent">
+        <option value="Planifié">Planifié</option>
+        <option value="Annulé">Annulé</option>
+        <option value="Terminé">Terminé</option>
+      </select>
+    </label>
+
+    <label class="block mb-2.5" *ngIf="selectedRdv">
+      <span class="text-gray-700 font-medium">Salle :</span>
+      <input [(ngModel)]="selectedRdv.salle" class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1fa183] focus:border-transparent" />
+    </label>
+
+    <label class="block mb-2.5" *ngIf="selectedRdv">
+      <span class="text-gray-700 font-medium">Notes :</span>
+      <textarea [(ngModel)]="selectedRdv.notes" rows="3" class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1fa183] focus:border-transparent"></textarea>
+    </label>
+
+    <div class="flex gap-2.5 mt-2.5">
+      <button (click)="saveRdv()" class="px-4 py-2 bg-[#1fa183] text-white rounded-md hover:bg-[#168a73] transition-colors duration-200 font-medium">Enregistrer</button>
+      <button (click)="cancel()" class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors duration-200 font-medium">Annuler</button>
+    </div>
+  </div>
+</div>

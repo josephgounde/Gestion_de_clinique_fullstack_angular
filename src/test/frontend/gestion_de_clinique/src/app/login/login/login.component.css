@@ -1,0 +1,17 @@
+:host {
+  @apply block min-h-screen w-full flex items-center justify-center p-5 box-border fixed top-0 left-0 z-[1000];
+  position: relative;
+  overflow: hidden;
+}
+
+:host::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url('/img1.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.4; 
+  z-index: -1;
+}

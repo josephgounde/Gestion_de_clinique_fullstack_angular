@@ -1,0 +1,18 @@
+#database PostgreSQL
+POSTGRES_SQL_HOST: localhost
+POSTGRES_SQL_PORT: 5432
+POSTGRES_SQL_DB: gestion_clinic_db
+POSTGRES_SQL_USERNAME: postgres
+POSTGRES_SQL_PASSWORD: postgres
+
+#SERVER
+ACTIVE_PROFILE: dev
+SERVER_PORT: 8080
+
+
+SMTP_HOST: smtp.gmail.com
+SMTP_PORT: 587
+SMTP_USER: techcytchi@gmail.com
+SMTP_PASSWORD: oarg lksl hicd fkvp
+SMTP_SSL_TRUST: smtp.gmail.com
+VERIFY_EMAIL_HOST: http://localhost:${SERVER_PORT}

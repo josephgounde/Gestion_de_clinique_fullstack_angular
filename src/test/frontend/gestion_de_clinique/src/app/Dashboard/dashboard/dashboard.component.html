@@ -1,0 +1,200 @@
+<div class="dashboard-container">
+  <!-- Header avec logo et déconnexion -->
+  <app-header 
+    pageTitle="Tableau de Bord Administrateur"
+    pageSubtitle="Gestion complète de la clinique">
+  </app-header>
+
+  <!-- Indicateur de chargement -->
+  <div class="loading-container" *ngIf="loading">
+    <div class="loading-spinner"></div>
+    <p>Chargement du tableau de bord...</p>
+  </div>
+
+  <!-- Message d'erreur -->
+  <div class="error-container" *ngIf="error && !loading">
+    <div class="error-message">
+      <span class="error-icon">⚠️</span>
+      <span>{{ error }}</span>
+      <button class="btn-retry" (click)="retryLoad()">🔄 Réessayer</button>
+    </div>
+  </div>
+
+  <!-- Contenu principal -->
+  <div class="dashboard-content" *ngIf="!loading">
+    
+    <!-- Statistiques principales -->
+    <div class="stats-grid">
+      <div class="stat-card patients">
+        <div class="stat-icon">👥</div>
+        <div class="stat-content">
+          <div class="stat-value">{{ dashboardStats.totalPatients | number }}</div>
+          <div class="stat-label">Patients Total</div>
+          <div class="stat-subtitle">+{{ dashboardStats.newPatientsThisMonth }} ce mois</div>
+        </div>
+      </div>
+
+      <div class="stat-card appointments">
+        <div class="stat-icon">📅</div>
+        <div class="stat-content">
+          <div class="stat-value">{{ dashboardStats.totalAppointments | number }}</div>
+          <div class="stat-label">Rendez-vous</div>
+          <div class="stat-subtitle">{{ dashboardStats.activeAppointments }} actifs</div>
+        </div>
+      </div>
+
+      <div class="stat-card revenue">
+        <div class="stat-icon">💰</div>
+        <div class="stat-content">
+          <div class="stat-value">{{ dashboardStats.totalRevenue | number }} FCFA</div>
+          <div class="stat-label">Revenus</div>
+          <div class="stat-subtitle">{{ dashboardStats.revenueThisMonth | number }} ce mois</div>
+        </div>
+      </div>
+
+      <div class="stat-card users">
+        <div class="stat-icon">👨‍⚕️</div>
+        <div class="stat-content">
+          <div class="stat-value">{{ dashboardStats.totalUsers | number }}</div>
+          <div class="stat-label">Utilisateurs</div>
+          <div class="stat-subtitle">{{ systemHealth.activeUsers }} connectés</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions rapides -->
+    <div class="quick-actions-section">
+      <h2>⚡ Actions Rapides</h2>
+      <div class="quick-actions-grid">
+        <a class="quick-action-card" *ngFor="let action of quickActions" 
+           [href]="action.route" 
+           [style.--action-color]="action.color">
+          <div class="action-icon">{{ action.icon }}</div>
+          <div class="action-content">
+            <div class="action-title">{{ action.title }}</div>
+            <div class="action-description">{{ action.description }}</div>
+          </div>
+        </a>
+    </div>
+    </div>
+
+    <!-- Sections détaillées -->
+    <div class="dashboard-sections">
+      
+      <!-- Activité récente -->
+      <div class="section-card activity-section">
+        <div class="section-header">
+          <h3>🕒 Activité Récente</h3>
+          <span class="section-subtitle">Dernières actions du système</span>
+        </div>
+        <div class="activity-list">
+          <div class="activity-item" *ngFor="let activity of recentActivity" 
+               [class]="getSeverityClass(activity.severity)">
+            <div class="activity-icon">{{ activity.icon }}</div>
+            <div class="activity-content">
+              <div class="activity-title">{{ activity.title }}</div>
+              <div class="activity-description">{{ activity.description }}</div>
+              <div class="activity-time">{{ activity.timestamp }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Utilisateurs récents -->
+      <div class="section-card users-section">
+        <div class="section-header">
+          <h3>👥 Utilisateurs Récents</h3>
+          <span class="section-subtitle">Dernières connexions</span>
+        </div>
+        <div class="users-list">
+          <div class="user-item" *ngFor="let user of recentUsers">
+            <div class="user-avatar">{{ user.avatar || getRoleIcon(user.role) }}</div>
+            <div class="user-info">
+              <div class="user-name">{{ user.name }}</div>
+              <div class="user-role">{{ user.role }}</div>
+              <div class="user-status" [class]="getStatusClass(user.status)">
+                {{ user.status }}
+              </div>
+            </div>
+            <div class="user-last-login">
+              <span class="login-time">{{ user.lastLogin }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Santé du système -->
+      <div class="section-card system-section">
+        <div class="section-header">
+          <h3>⚙️ Santé du Système</h3>
+          <span class="section-subtitle">État des services</span>
+        </div>
+        <div class="system-metrics">
+          <div class="metric-item">
+            <div class="metric-label">Base de données</div>
+            <div class="metric-value">
+              <div class="progress-bar">
+                <div class="progress-fill" 
+                     [class]="getDatabaseUsageClass()"
+                     [style.width.%]="systemHealth.databaseUsage"></div>
+              </div>
+              <span class="progress-text">{{ systemHealth.databaseUsage }}%</span>
+            </div>
+          </div>
+          
+          <div class="metric-item">
+            <div class="metric-label">Charge système</div>
+            <div class="metric-value">
+              <div class="progress-bar">
+                <div class="progress-fill" 
+                     [class]="systemHealth.systemLoad >= 80 ? 'usage-warning' : 'usage-normal'"
+                     [style.width.%]="systemHealth.systemLoad"></div>
+              </div>
+              <span class="progress-text">{{ systemHealth.systemLoad }}%</span>
+            </div>
+          </div>
+
+          <div class="metric-item">
+            <div class="metric-label">Dernière sauvegarde</div>
+            <div class="metric-value text">{{ systemHealth.lastBackup }}</div>
+          </div>
+
+          <div class="metric-item">
+            <div class="metric-label">Utilisateurs actifs</div>
+            <div class="metric-value text">{{ systemHealth.activeUsers }} connectés</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alertes -->
+      <div class="section-card alerts-section">
+        <div class="section-header">
+          <h3>🔔 Alertes & Notifications</h3>
+          <span class="section-subtitle">{{ alerts.length }} notifications</span>
+        </div>
+        <div class="alerts-list">
+          <div class="alert-item" *ngFor="let alert of alerts" 
+               [class]="alert.read ? 'alert-read' : 'alert-unread'"
+               (click)="markAlertAsRead(alert.id)">
+            <div class="alert-icon">
+              <span *ngIf="alert.type === 'warning'">⚠️</span>
+              <span *ngIf="alert.type === 'error'">🚨</span>
+              <span *ngIf="alert.type === 'success'">✅</span>
+              <span *ngIf="alert.type === 'info'">ℹ️</span>
+            </div>
+            <div class="alert-content">
+              <div class="alert-title">{{ alert.title }}</div>
+              <div class="alert-message">{{ alert.message }}</div>
+              <div class="alert-time">{{ alert.timestamp }}</div>
+            </div>
+            <div class="alert-status" *ngIf="!alert.read">
+              <span class="unread-dot"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>

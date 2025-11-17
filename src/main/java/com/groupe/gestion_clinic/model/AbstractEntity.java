@@ -1,0 +1,34 @@
+package com.groupe.gestion_clinic.model;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
+@Getter
+@Setter
+@SuperBuilder
+@MappedSuperclass
+@NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
+public class AbstractEntity implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @CreatedDate
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime lastUpdate;
+}

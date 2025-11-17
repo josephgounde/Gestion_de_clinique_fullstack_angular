@@ -1,0 +1,29 @@
+<div class="p-4">
+  <h2 class="text-xl font-bold mb-4">Liste des factures</h2>
+  <div class="mb-4">
+    <div class="relative flex items-center w-full max-w-80">
+      <input type="text" [(ngModel)]="search" placeholder="Rechercher une facture..." class="w-full py-2.5 pr-10 pl-4 rounded-[18px] border-[1.5px] border-[#1fa183] bg-[#fcfffe] text-[#212121] text-base transition-all duration-200 shadow-[0_2px_8px_rgba(31,161,131,0.07)] focus:outline-none focus:border-[#1fa183] focus:shadow-[0_0_0_2px_rgba(31,161,131,0.2)]" />
+      <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#1fa183] text-xl pointer-events-none opacity-85">
+        <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M20 20l-3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </span>
+    </div>
+  </div>
+  <table class="min-w-full bg-white rounded shadow">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="p-2">ID</th>
+        <th class="p-2">Patient ID</th>
+        <th class="p-2">Montant</th>
+        <th class="p-2">Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let f of filteredFactures" class="border-t">
+        <td class="p-2">{{ f.id }}</td>
+        <td class="p-2">{{ f.patientId }}</td>
+        <td class="p-2">{{ f.montant }}</td>
+        <td class="p-2">{{ f.date }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

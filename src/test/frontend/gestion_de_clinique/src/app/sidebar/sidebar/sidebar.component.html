@@ -1,0 +1,40 @@
+<div class="bg-[#e8f4f8] w-60 min-w-60 max-w-60 h-screen flex flex-col gap-2 fixed top-0 left-0 m-0 items-stretch p-4 box-border overflow-y-auto z-[1000]">
+  <!-- Debug info - à supprimer plus tard -->
+  <!-- <div class="bg-red-100 p-2 text-xs text-black rounded mb-2">
+    <div>Rôle actuel: '{{ role }}'</div>
+    <div>Nombre d'éléments filtrés: {{ filteredMenu.length }}</div>
+    <div>Éléments: {{ getMenuLabels() }}</div>
+  </div> -->
+    <div class="flex items-center gap-4">
+          <svg class="w-8 h-8 flex-shrink-0" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z" fill="#1fa183"/>
+            <path d="M19 14L17.5 15.5L19 17L17.5 18.5L19 20L17.5 21.5L19 23" stroke="#1fa183" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M5 14L6.5 15.5L5 17L6.5 18.5L5 20L6.5 21.5L5 23" stroke="#1fa183" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div class="flex flex-col">
+            <h1 class="text-3xl font-bold text-[#1fa183] m-0 tracking-wide md:text-2xl sm:text-xl">MediClin</h1>
+            <p class="text-sm text-gray-600 m-0 font-medium">Centre de Santé</p>
+          </div>
+    </div>
+  <ul class="list-none py-3 px-2 m-0 bg-white/10 rounded-xl text-center w-full box-border shadow-[0_2px_4px_rgba(0,0,0,0.05)] border border-[#1fa183]/10">
+    <li *ngFor="let item of filteredMenu" class="my-5 text-white bg-[#1fa183] rounded-[10px] py-2.5 px-3 w-full transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] relative overflow-hidden box-border group hover:bg-white hover:text-[#1fa183] hover:translate-x-2 hover:scale-[1.02] hover:shadow-[0_4px_12px_rgba(31,161,131,0.25)] hover:border hover:border-[#1fa183]/30 before:content-[''] before:absolute before:top-0 before:-left-full before:w-full before:h-full before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:transition-all before:duration-700 before:pointer-events-none hover:before:left-full">
+      <a [routerLink]="item.route" routerLinkActive="!bg-white !text-[#1fa183] !shadow-[0_4px_12px_rgba(31,161,131,0.25)] !font-bold !border !border-[#1fa183]/30 hover:!translate-x-2 hover:!scale-[1.02]" [routerLinkActiveOptions]="{ exact: true }" class="block w-full text-sm font-semibold text-white m-0 p-0 rounded-lg no-underline box-border transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] text-center relative z-[1] group-hover:text-[#1fa183] group-hover:font-bold focus:outline-2 focus:outline-[#1fa183] focus:outline-offset-2 focus:rounded-lg">
+        <span *ngIf="item.icon && item.icon.length === 1">{{ item.icon }}</span>
+        <span *ngIf="item.icon && item.icon.length > 1" [innerHTML]="item.icon"></span>
+        <span>{{ item.label }}</span>
+      </a>
+    </li>
+  </ul>
+  <button
+  type="button"
+  class="w-full flex items-center justify-center gap-2 bg-red-500 text-white border-none px-4 py-2 rounded-xl cursor-pointer transition-all duration-300 shadow-[0_2px_6px_rgba(233,68,68,0.08)] hover:bg-red-600 hover:shadow-[0_4px_12px_rgba(233,68,68,0.18)] mt-auto mb-4"
+  (click)="onLogout()" title="Déconnexion">
+  <span>Déconnexion</span>
+  <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24">
+    <path d="M16 17L21 12L16 7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M21 12H9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M12 19C7.58172 19 4 15.4183 4 11C4 6.58172 7.58172 3 12 3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
+
+</div>

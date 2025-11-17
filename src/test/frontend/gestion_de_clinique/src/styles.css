@@ -1,0 +1,23 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* Configuration globale avec Tailwind */
+@layer base {
+  html, body {
+    @apply h-full m-0 p-0;
+  }
+
+  body {
+    @apply font-sans bg-[#fcfffe] text-[#212121];
+    font-family: 'Segoe UI', Arial, sans-serif;
+  }
+
+  h1, h2, h3, h4 {
+    @apply text-[#1fa183];
+  }
+
+  a {
+    @apply no-underline;
+  }
+}

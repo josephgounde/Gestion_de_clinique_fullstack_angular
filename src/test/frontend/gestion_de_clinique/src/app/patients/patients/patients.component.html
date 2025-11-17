@@ -1,0 +1,98 @@
+<app-header 
+  pageTitle="Gestion des Patients"
+  pageSubtitle="Ajouter, modifier ou supprimer des patients">
+</app-header>
+
+<div class="p-6 max-w-4xl mx-auto">
+  <h2 class="text-2xl font-bold text-gray-800 mb-6">Gestion des Patients</h2>
+  
+  <!-- Barre de recherche et bouton ajout -->
+  <div class="flex gap-3 mb-5">
+    <input type="text" [(ngModel)]="search" placeholder="Rechercher un patient..." class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1fa183] focus:border-transparent" />
+    <button (click)="addPatient()" class="px-4 py-2 bg-[#1fa183] text-white rounded-lg hover:bg-[#168a73] transition-colors duration-200 font-medium">+ Ajouter</button>
+  </div>
+
+  <!-- Table des patients -->
+  <table *ngIf="!showForm" class="w-full border-collapse bg-white rounded-lg overflow-hidden shadow-[0_2px_8px_rgba(31,161,131,0.08)]">
+    <thead>
+      <tr>
+        <th class="px-2 py-2.5 bg-[#e8f4f8] text-[#1fa183] text-left border-b border-gray-200">Nom</th>
+        <th class="px-2 py-2.5 bg-[#e8f4f8] text-[#1fa183] text-left border-b border-gray-200">Prénom</th>
+        <th class="px-2 py-2.5 bg-[#e8f4f8] text-[#1fa183] text-left border-b border-gray-200">Date de naissance</th>
+        <th class="px-2 py-2.5 bg-[#e8f4f8] text-[#1fa183] text-left border-b border-gray-200">Sexe</th>
+        <th class="px-2 py-2.5 bg-[#e8f4f8] text-[#1fa183] text-left border-b border-gray-200">Téléphone</th>
+        <th class="px-2 py-2.5 bg-[#e8f4f8] text-[#1fa183] text-left border-b border-gray-200">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of filteredPatients" class="border-b border-gray-200 last:border-b-0">
+        <td class="px-2 py-2.5">{{ p.nom }}</td>
+        <td class="px-2 py-2.5">{{ p.prenom }}</td>
+        <td class="px-2 py-2.5">{{ p.dateNaissance | date:'dd/MM/yyyy' }}</td>
+        <td class="px-2 py-2.5">{{ p.sexe }}</td>
+        <td class="px-2 py-2.5">{{ p.telephone }}</td>
+        <td class="px-2 py-2.5">
+          <button (click)="editPatient(p)" class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors duration-200 text-sm mr-2">Modifier</button>
+          <button 
+            [disabled]="!p.id"
+            (click)="p.id && deletePatient(p.id)" 
+            class="px-3 py-1 text-white rounded transition-colors duration-200 text-sm"
+            [ngClass]="{
+              'bg-red-500 hover:bg-red-600 cursor-pointer': p.id,
+              'bg-red-300 cursor-not-allowed': !p.id
+            }"
+            [title]="!p.id ? 'Impossible de supprimer : ID manquant' : 'Supprimer ce patient'"
+          >Supprimer</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Formulaire d'ajout/modification -->
+  <div *ngIf="showForm && selectedPatient" class="bg-gray-50 rounded-lg p-5 shadow-[0_1px_4px_rgba(31,161,131,0.05)] max-w-md mx-auto">
+    <h3 class="text-lg font-semibold text-gray-800 mb-4">{{ isEdit ? 'Modifier' : 'Ajouter' }} un patient</h3>
+
+    <label class="block mb-2.5">
+      <span class="text-gray-700 font-medium">Nom :</span>
+      <input [(ngModel)]="selectedPatient.nom" class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1fa183] focus:border-transparent" />
+    </label>
+
+    <label class="block mb-2.5">
+      <span class="text-gray-700 font-medium">Prénom :</span>
+      <input [(ngModel)]="selectedPatient.prenom" class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1fa183] focus:border-transparent" />
+    </label>
+
+    <label class="block mb-2.5">
+      <span class="text-gray-700 font-medium">Date de naissance :</span>
+      <input type="date" [(ngModel)]="selectedPatient.dateNaissance" class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1fa183] focus:border-transparent" />
+    </label>
+
+    <label class="block mb-2.5">
+      <span class="text-gray-700 font-medium">Sexe :</span>
+      <select [(ngModel)]="selectedPatient.sexe" class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1fa183] focus:border-transparent">
+        <option value="Homme">Homme</option>
+        <option value="Femme">Femme</option>
+      </select>
+    </label>
+
+    <label class="block mb-2.5">
+      <span class="text-gray-700 font-medium">Téléphone :</span>
+      <input [(ngModel)]="selectedPatient.telephone" class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1fa183] focus:border-transparent" />
+    </label>
+
+    <label class="block mb-2.5">
+      <span class="text-gray-700 font-medium">Email :</span>
+      <input type="email" [(ngModel)]="selectedPatient.email" class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1fa183] focus:border-transparent" />
+    </label>
+
+    <label class="block mb-2.5">
+      <span class="text-gray-700 font-medium">Adresse :</span>
+      <input [(ngModel)]="selectedPatient.adresse" class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1fa183] focus:border-transparent" />
+    </label>
+
+    <div class="flex gap-2.5 mt-2.5">
+      <button (click)="savePatient()" class="px-4 py-2 bg-[#1fa183] text-white rounded-md hover:bg-[#168a73] transition-colors duration-200 font-medium">Enregistrer</button>
+      <button (click)="cancel()" class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors duration-200 font-medium">Annuler</button>
+    </div>
+  </div>
+</div>

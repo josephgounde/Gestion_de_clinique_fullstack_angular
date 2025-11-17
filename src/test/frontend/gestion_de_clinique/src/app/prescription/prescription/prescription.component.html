@@ -1,0 +1,147 @@
+<app-header
+  pageTitle="Gestion des Prescriptions"
+  pageSubtitle="Ajouter, modifier ou supprimer des prescriptions">
+</app-header>
+
+<div class="p-6 max-w-4xl mx-auto bg-white rounded-lg shadow-md">
+
+  <h2 class="text-3xl font-extrabold text-gray-900 mb-8">Gestion des Prescriptions</h2>
+
+  <!-- Barre de recherche et bouton d'ajout -->
+  <div class="flex flex-wrap gap-4 mb-6 items-center">
+    <input type="text" [(ngModel)]="search"
+      placeholder="Rechercher par médicament ou notes..."
+      class="flex-grow min-w-[250px] px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1fa183] focus:border-transparent transition" />
+
+    <button (click)="addPrescription()"
+      class="px-5 py-3 bg-[#1fa183] text-white font-semibold rounded-md shadow hover:bg-[#168a73] transition">
+      + Nouvelle Prescription
+    </button>
+  </div>
+
+  <!-- DIV wrapper pour gérer le scroll horizontal -->
+  <div class="overflow-x-auto rounded-lg border border-gray-200 shadow-inner">
+    <table *ngIf="!showForm" class="w-full border-collapse text-left min-w-max">
+      <thead class="bg-[#e8f4f8] text-[#1fa183]">
+        <tr>
+          <th class="px-4 py-3">ID Rendez-vous</th>
+          <th class="px-4 py-3">Date Prescription</th>
+          <th class="px-4 py-3">Médicaments</th>
+          <th class="px-4 py-3">Posologie</th>
+          <th class="px-4 py-3">Durée traitement</th>
+          <th class="px-4 py-3">Statut</th>
+          <th class="px-4 py-3">Notes</th>
+          <th class="px-4 py-3">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+        <tr *ngFor="let p of filteredPrescriptions" class="hover:bg-gray-50">
+          <td class="px-4 py-3 font-mono text-sm">{{ p.rendezvousId }}</td>
+          <td class="px-4 py-3">{{ p.datePrescription | date: 'dd/MM/yyyy' }}</td>
+          <td class="px-4 py-3 truncate max-w-xs" [title]="p.medicaments">{{ p.medicaments || 'Non spécifié' }}</td>
+          <td class="px-4 py-3 truncate max-w-xs" [title]="p.posologie">{{ p.posologie || 'Non spécifié' }}</td>
+          <td class="px-4 py-3">{{ p.dureeTraitement || 'Non spécifié' }}</td>
+          <td class="px-4 py-3 font-semibold">
+            <span
+              [ngClass]="{
+                'text-green-600': p.statut === 'Active',
+                'text-yellow-600': p.statut === 'Suspendue',
+                'text-gray-500': p.statut === 'Terminée'
+              }">
+              {{ p.statut }}
+            </span>
+          </td>
+          <td class="px-4 py-3 truncate max-w-xs" [title]="p.notes">{{ p.notes || 'Aucune note' }}</td>
+          <td class="px-4 py-3 whitespace-nowrap space-x-2">
+            <button (click)="editPrescription(p)"
+              class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 rounded px-3 py-1 text-sm transition">
+              Modifier
+            </button>
+            <button (click)="deletePrescription(p.id)"
+              class="text-white bg-red-600 hover:bg-red-700 focus:ring-2 focus:ring-red-500 rounded px-3 py-1 text-sm transition">
+              Supprimer
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Formulaire ajout/modification -->
+  <div *ngIf="showForm" class="mt-8 bg-gray-50 p-6 rounded-lg shadow max-w-md mx-auto">
+    
+    <h3 class="text-xl font-semibold mb-6">{{ isEdit ? 'Modifier' : 'Nouvelle' }} prescription</h3>
+
+    <form (ngSubmit)="savePrescription()" class="space-y-4">
+
+      <div *ngIf="selectedPrescription">
+        <label class="block mb-1 font-medium text-gray-700">ID Rendez-vous :</label>
+        <input type="number" [(ngModel)]="selectedPrescription.rendezvousId" name="rendezvousId" required
+          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1fa183]" />
+      </div>
+
+      <div *ngIf="selectedPrescription">
+        <label class="block mb-1 font-medium text-gray-700">ID Patient :</label>
+        <input type="number" [(ngModel)]="selectedPrescription.patientId" name="patientId" required
+          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1fa183]" />
+      </div>
+
+      <div *ngIf="selectedPrescription">
+        <label class="block mb-1 font-medium text-gray-700">ID Médecin :</label>
+        <input type="number" [(ngModel)]="selectedPrescription.medecinId" name="medecinId" required
+          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1fa183]" />
+      </div>
+
+      <div *ngIf="selectedPrescription">
+        <label class="block mb-1 font-medium text-gray-700">Date de prescription :</label>
+        <input type="date" [(ngModel)]="selectedPrescription.datePrescription" name="datePrescription" required
+          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1fa183]" />
+      </div>
+
+      <div *ngIf="selectedPrescription">
+        <label class="block mb-1 font-medium text-gray-700">Médicaments :</label>
+        <textarea rows="3" [(ngModel)]="selectedPrescription.medicaments" name="medicaments"
+          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1fa183]"></textarea>
+      </div>
+
+      <div *ngIf="selectedPrescription">
+        <label class="block mb-1 font-medium text-gray-700">Posologie :</label>
+        <textarea rows="2" [(ngModel)]="selectedPrescription.posologie" name="posologie"
+          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1fa183]"></textarea>
+      </div>
+
+      <div *ngIf="selectedPrescription">
+        <label class="block mb-1 font-medium text-gray-700">Durée traitement :</label>
+        <input placeholder="Ex: 10 jours" [(ngModel)]="selectedPrescription.dureeTraitement" name="dureeTraitement"
+          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1fa183]" />
+      </div>
+
+      <div *ngIf="selectedPrescription">
+        <label class="block mb-1 font-medium text-gray-700">Statut :</label>
+        <select [(ngModel)]="selectedPrescription.statut" name="statut"
+          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1fa183]">
+          <option value="Active">Active</option>
+          <option value="Suspendue">Suspendue</option>
+          <option value="Terminée">Terminée</option>
+        </select>
+      </div>
+
+      <div *ngIf="selectedPrescription">
+        <label class="block mb-1 font-medium text-gray-700">Notes :</label>
+        <textarea rows="3" [(ngModel)]="selectedPrescription.notes" name="notes"
+          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1fa183]"></textarea>
+      </div>
+
+      <div class="flex justify-end space-x-4 mt-5">
+        <button type="submit" class="bg-[#1fa183] text-white rounded-md px-5 py-2 font-semibold hover:bg-[#168a73] transition">
+          Enregistrer
+        </button>
+        <button type="button" (click)="cancel()"
+          class="bg-gray-500 text-white rounded-md px-5 py-2 font-semibold hover:bg-gray-600 transition">
+          Annuler
+        </button>
+      </div>
+    </form>
+  </div>
+
+</div>

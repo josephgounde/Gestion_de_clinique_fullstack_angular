@@ -1,0 +1,56 @@
+<!-- Conteneur principal avec largeur maximale augmentée à 900px (au lieu de plus petit) -->
+<div class="w-96  my-15 mx-0 p-8 bg-white rounded-xl shadow-[0_0_20px_rgba(0,0,0,0.07)]">
+
+  <!-- Entête du formulaire avec logo et titre -->
+  <div class="flex items-center  justify-start gap-6 mb-6">
+
+    <!-- Logo MediClin avec icône -->
+    <span class="text-[#1fa183] text-2xl font-bold flex items-center mr-6 gap-2">
+      <svg class="flex-shrink-0" width="24" height="24" viewBox="0 0 24 24" fill="none"
+        xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z" fill="#1fa183" />
+        <path d="M19 14L17.5 15.5L19 17L17.5 18.5L19 20L17.5 21.5L19 23" stroke="#1fa183" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M5 14L6.5 15.5L5 17L6.5 18.5L5 20L6.5 21.5L5 23" stroke="#1fa183" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+      MediClin
+    </span>
+
+    <!-- Titre Connexion -->
+    <div class="flex justify-end">
+      <span class="text-gray-600 font-medium">Connexion</span>
+    </div>
+    
+  </div>
+
+  <!-- Formulaire de connexion -->
+  <form (ngSubmit)="login()">
+
+    <div class="mb-4">
+      <!-- Label et champ Email -->
+      <label for="email" class="max-w-2xl block text-sm font-medium text-gray-700 mb-1">Email</label>
+      <input type="email" id="email" [(ngModel)]="email" name="email" required placeholder="Entrez votre E-mail"
+        class="w-full p-2.5 border border-gray-300 rounded-md mt-1
+               focus:border-2 focus:border-[#1fa183] focus:outline-none
+               disabled:bg-gray-100 disabled:cursor-not-allowed" />
+    </div>
+
+    <div class="mb-4">
+      <!-- Label et champ Mot de passe -->
+      <label for="password" class="max-w-2xl block text-sm font-medium text-gray-700 mb-1">Mot de passe</label>
+      <input type="password" id="password" [(ngModel)]="password" name="password" required placeholder="Entrez votre Mot de passe"
+        class="w-full p-2.5 border border-gray-300 rounded-md mt-1
+               focus:border-2 focus:border-[#1fa183] focus:outline-none
+               disabled:bg-gray-100 disabled:cursor-not-allowed" />
+    </div>
+
+    <!-- Bouton Connexion -->
+    <button type="submit"
+      class="w-full bg-[#1fa183] text-white p-2.5 border-none rounded-md font-bold cursor-pointer transition-colors duration-200
+             hover:bg-[#1fa995] disabled:bg-gray-400 disabled:cursor-not-allowed">
+      Se connecter
+    </button>
+
+  </form>
+</div>

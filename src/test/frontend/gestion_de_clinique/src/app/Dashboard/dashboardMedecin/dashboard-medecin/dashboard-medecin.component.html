@@ -1,0 +1,64 @@
+<app-header
+  pageTitle="Tableau de Bord Médecin"
+  pageSubtitle="Vue d'ensemble de votre activité"
+  class="mb-6">
+</app-header>
+
+<div class="dashboard-medecin-content px-6 py-4">
+  <!-- Statistiques clés -->
+  <div class="stats-row grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="stat-card bg-white shadow-md rounded-lg p-4 text-center">
+      <div class="stat-icon text-4xl mb-2">🧑‍🤝‍🧑</div>
+      <div class="stat-value text-2xl font-bold text-blue-600">{{ totalPatients }}</div>
+      <div class="stat-label text-sm text-gray-500">Patients suivis</div>
+    </div>
+    <div class="stat-card bg-white shadow-md rounded-lg p-4 text-center">
+      <div class="stat-icon text-4xl mb-2">📅</div>
+      <div class="stat-value text-2xl font-bold text-green-600">{{ rdvToday }}</div>
+      <div class="stat-label text-sm text-gray-500">RDV aujourd'hui</div>
+    </div>
+    <div class="stat-card bg-white shadow-md rounded-lg p-4 text-center">
+      <div class="stat-icon text-4xl mb-2">⏳</div>
+      <div class="stat-value text-2xl font-bold text-yellow-600">{{ upcomingRdv }}</div>
+      <div class="stat-label text-sm text-gray-500">À venir</div>
+    </div>
+  </div>
+
+  <!-- Sections -->
+  <div class="dashboard-sections grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Prochains RDV -->
+    <div class="section-card bg-white shadow-md rounded-lg p-4">
+      <h3 class="text-lg font-semibold mb-4 text-gray-700">Prochains Rendez-vous</h3>
+      <ul class="rdv-list space-y-2">
+        <li *ngFor="let rdv of prochainsRdv" class="flex justify-between text-sm text-gray-600">
+          <span class="rdv-time font-medium">{{ rdv.heure }}</span>
+          <span class="rdv-patient">{{ rdv.patient }}</span>
+          <span class="rdv-type italic">{{ rdv.type }}</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Patients à risque -->
+    <div class="section-card bg-white shadow-md rounded-lg p-4">
+      <h3 class="text-lg font-semibold mb-4 text-gray-700">Patients à risque</h3>
+      <ul class="risk-list space-y-2">
+        <li *ngFor="let patient of patientsRisque" class="flex justify-between text-sm text-red-600">
+          <span class="risk-patient font-medium">{{ patient.nom }}</span>
+          <span class="risk-info italic">{{ patient.info }}</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Activité récente -->
+    <div class="section-card bg-white shadow-md rounded-lg p-4">
+      <h3 class="text-lg font-semibold mb-4 text-gray-700">Activité récente</h3>
+      <ul class="activity-list space-y-2">
+        <li *ngFor="let act of activiteRecente" class="flex justify-between text-sm text-gray-600">
+          <span class="activity-icon text-xl">{{ act.icon }}</span>
+          <span class="activity-desc">{{ act.desc }}</span>
+          <span class="activity-time text-xs text-gray-400">{{ act.time }}</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

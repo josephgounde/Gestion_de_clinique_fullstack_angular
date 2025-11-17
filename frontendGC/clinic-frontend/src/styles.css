@@ -1,0 +1,257 @@
+/* Styles globaux pour les barres de défilement modernes */
+
+/* Webkit browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.1) transparent;
+}
+
+/* Styles pour les conteneurs avec défilement */
+.content, .sidebar-content, .dashboard-container {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.1) transparent;
+}
+
+/* Animation smooth pour le défilement */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Styles pour les éléments avec overflow */
+.overflow-auto, .overflow-y-auto, .overflow-x-auto {
+  scrollbar-width: thin;
+  scrollbar-color: #007bff #f1f1f1;
+}
+
+.overflow-auto::-webkit-scrollbar,
+.overflow-y-auto::-webkit-scrollbar,
+.overflow-x-auto::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+
+.overflow-auto::-webkit-scrollbar-thumb,
+.overflow-y-auto::-webkit-scrollbar-thumb,
+.overflow-x-auto::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 2px;
+}
+
+.overflow-auto::-webkit-scrollbar-thumb:hover,
+.overflow-y-auto::-webkit-scrollbar-thumb:hover,
+.overflow-x-auto::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+/* Suppression des bordures noires dans toute l'application */
+* {
+  border: none !important;
+}
+
+/* Remplacement par des bordures subtiles pour les éléments qui en ont besoin */
+.form-control, input, textarea, select {
+  border: none !important;
+  border-radius: 8px !important;
+}
+
+.form-control:focus, input:focus, textarea:focus, select:focus {
+  border-color: #282a2b !important;
+  padding: 5px !important;
+  outline: none !important;
+ /* box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;*/
+}
+
+/* Bordures pour les tableaux */
+table {
+  border: none !important;
+}
+
+th, td {
+  border: none !important;
+  border-bottom: 1px solid #f0f0f0 !important;
+}
+
+th {
+  border-bottom: 2px solid #e9ecef !important;
+}
+
+/* Bordures pour les cartes et conteneurs */
+.card, .patient-card, .user-form, .patient-form, .header {
+  border: none !important;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
+}
+
+/* Bordures pour les boutons - garder seulement les ombres */
+button {
+  border: none !important;
+}
+
+/* Bordures pour les modales */
+.modal, .modal-content {
+  border: none !important;
+}
+
+/* Bordures pour les sidebars */
+.sidebar {
+  border: none !important;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1) !important;
+}
+
+/* Bordures pour les navbars */
+.navbar {
+  border: none !important;
+}
+/* Style uniforme pour tous les boutons Actualiser */
+.btn-secondary, .btn-refresh {
+  background: linear-gradient(135deg, #6c757d, #5a6268) !important;
+  color: white !important;
+  border: none !important;
+  padding: 0.75rem 1.5rem !important;
+  border-radius: 8px !important;
+  cursor: pointer !important;
+  font-weight: 600 !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 3px 8px rgba(108, 117, 125, 0.2) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+}
+
+.btn-secondary:hover, .btn-refresh:hover {
+  background: linear-gradient(135deg, #5a6268, #495057) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 16px rgba(108, 117, 125, 0.4) !important;
+}
+
+.btn-secondary:disabled, .btn-refresh:disabled {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+}
+/* Layout scrolling: let the main content scroll inside the dashboard container */
+html, body {
+  height: 100%;
+  /* allow the document to behave normally; main app will handle internal scrolling */
+  overflow: auto;
+  margin: 0;
+  padding: 0;
+}
+
+app-root {
+  height: 100vh;
+  overflow: visible;
+}
+
+.dashboard-container, .layout-container {
+  height: 100vh !important;
+  /* keep container sizing but allow internal scrollable children */
+  overflow: hidden;
+}
+
+.content {
+  overflow-y: auto;
+  height: calc(100vh - 160px);
+}
+
+/* Make .main-content the scroll root inside the dashboard container.
+   Important: min-height:0 on flex children allows overflow to work. */
+.main-content {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  height: auto !important;
+  min-height: 0 !important;
+}
+/* Style uniforme pour tous les formulaires de filtres */
+.filter-section, .filters {
+  background: white !important;
+  padding: 1.5rem !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08) !important;
+  margin-bottom: 2rem !important;
+  display: flex !important;
+  gap: 1rem !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+}
+
+.filter-select, .filter-date, .search-input {
+  padding: 0.75rem 1rem !important;
+  border: 2px solid #e9ecef !important;
+  border-radius: 8px !important;
+  font-size: 0.95rem !important;
+  transition: all 0.3s ease !important;
+  background: #f8f9fa !important;
+  min-width: 180px !important;
+}
+
+.filter-select:focus, .filter-date:focus, .search-input:focus {
+  outline: none !important;
+  border-color: #007bff !important;
+  background: white !important;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.15) !important;
+  transform: translateY(-1px) !important;
+}
+
+.filter-select:hover, .filter-date:hover, .search-input:hover {
+  border-color: #007bff !important;
+  background: white !important;
+}
+
+/* Labels pour les filtres */
+.filter-section::before {
+  content: "🔍 Filtres:" !important;
+  font-weight: 600 !important;
+  color: #495057 !important;
+  margin-right: 0.5rem !important;
+}
+/* Correction de la largeur du bouton effacer dans les filtres */
+.filter-section .btn-clear,
+.filters .btn-clear,
+.filter-section button[type="reset"],
+.filters button[type="reset"] {
+  min-width: auto !important;
+  width: auto !important;
+  padding: 0.75rem 1rem !important;
+  white-space: nowrap !important;
+}
+/* Correction globale de tous les boutons dans les filtres */
+.filter-section button,
+.filters button,
+.header-actions button {
+  min-width: auto !important;
+  width: auto !important;
+  padding: 0.75rem 1rem !important;
+  white-space: nowrap !important;
+}
+
+/* Exception pour les champs de saisie qui doivent garder leur largeur */
+.filter-section input,
+.filter-section select,
+.filters input,
+.filters select {
+  min-width: 180px !important;
+}
