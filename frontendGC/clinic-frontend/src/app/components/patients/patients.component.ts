@@ -134,27 +134,41 @@ import { PatientHistoryModalComponent } from '../medecin/patient-history-modal.c
 
           <div *ngIf="showAddForm" class="form-card">
             <h3>{{ editingPatient ? 'Modifier' : 'Ajouter' }} un Patient</h3>
-            <form (ngSubmit)="savePatient()" #patientForm="ngForm">
+            <form (ngSubmit)="savePatient()" #patientForm="ngForm" novalidate>
               <div class="form-grid-three">
                 <div class="form-group">
                   <label for="nom">Nom:</label>
-                  <input id="nom" [(ngModel)]="currentPatient.nom" name="nom" required class="form-control">
+                  <input id="nom" [(ngModel)]="currentPatient.nom" name="nom" required #nomModel="ngModel" class="form-control">
+                  <div class="field-error" *ngIf="nomModel.invalid && nomModel.touched">Le nom est requis.</div>
                 </div>
                 <div class="form-group">
                   <label for="prenom">Prénom:</label>
-                  <input id="prenom" [(ngModel)]="currentPatient.prenom" name="prenom" required class="form-control">
+                  <input id="prenom" [(ngModel)]="currentPatient.prenom" name="prenom" required #prenomModel="ngModel" class="form-control">
+                  <div class="field-error" *ngIf="prenomModel.invalid && prenomModel.touched">Le prénom est requis.</div>
                 </div>
                 <div class="form-group">
                   <label for="email">Email:</label>
-                  <input id="email" type="email" [(ngModel)]="currentPatient.email" name="email" required class="form-control">
+                  <input id="email" type="email" [(ngModel)]="currentPatient.email" name="email" required #emailModel="ngModel" class="form-control">
+                  <div class="field-error" *ngIf="emailModel.invalid && emailModel.touched">
+                    <span *ngIf="emailModel.errors?.['required']">L'email est requis.</span>
+                    <span *ngIf="emailModel.errors?.['email']">Format d'email invalide.</span>
+                  </div>
                 </div>
                 <div class="form-group">
                   <label for="telephone">Téléphone:</label>
-                  <input id="telephone" [(ngModel)]="currentPatient.telephone" name="telephone" required class="form-control">
+                  <input id="telephone" type="tel" pattern="^[0-9]{8,15}$" [(ngModel)]="currentPatient.telephone" name="telephone" required #telephoneModel="ngModel" class="form-control">
+                  <div class="field-error" *ngIf="telephoneModel.invalid && telephoneModel.touched">
+                    <span *ngIf="telephoneModel.errors?.['required']">Le téléphone est requis.</span>
+                    <span *ngIf="telephoneModel.errors?.['pattern']">Doit contenir 8 à 15 chiffres.</span>
+                  </div>
                 </div>
                 <div class="form-group">
                   <label for="dateNaissance">Date de naissance:</label>
-                  <input id="dateNaissance" type="date" [(ngModel)]="currentPatient.dateNaissance" name="dateNaissance" required class="form-control">
+                  <input id="dateNaissance" type="date" [(ngModel)]="currentPatient.dateNaissance" name="dateNaissance" required #dateModel="ngModel" [max]="maxDate" class="form-control">
+                  <div class="field-error" *ngIf="dateModel.invalid && dateModel.touched">
+                    <span *ngIf="dateModel.errors?.['required']">La date de naissance est requise.</span>
+                    <span *ngIf="dateModel.errors?.['max']">La date de naissance doit être dans le passé.</span>
+                  </div>
                 </div>
                 <div class="form-group"></div> </div>
 
@@ -174,7 +188,8 @@ import { PatientHistoryModalComponent } from '../medecin/patient-history-modal.c
               <div class="form-grid-two">
                 <div class="form-group">
                   <label for="street">Rue:</label>
-                  <input id="street" [(ngModel)]="currentPatient.adressDto.street" name="street" required class="form-control">
+                  <input id="street" [(ngModel)]="currentPatient.adressDto.street" name="street" required #streetModel="ngModel" class="form-control">
+                  <div class="field-error" *ngIf="streetModel.invalid && streetModel.touched">La rue est requise.</div>
                 </div>
                 <div class="form-group">
                   <label for="houseNumber">Numéro:</label>
@@ -182,16 +197,22 @@ import { PatientHistoryModalComponent } from '../medecin/patient-history-modal.c
                 </div>
                 <div class="form-group">
                   <label for="city">Ville:</label>
-                  <input id="city" [(ngModel)]="currentPatient.adressDto.city" name="city" required class="form-control">
+                  <input id="city" [(ngModel)]="currentPatient.adressDto.city" name="city" required #cityModel="ngModel" class="form-control">
+                  <div class="field-error" *ngIf="cityModel.invalid && cityModel.touched">La ville est requise.</div>
                 </div>
                 <div class="form-group">
                   <label for="postalCode">Code Postal:</label>
-                  <input id="postalCode" type="number" [(ngModel)]="currentPatient.adressDto.postalCode" name="postalCode" required class="form-control">
+                  <input id="postalCode" type="text" pattern="^[0-9A-Za-z -]{3,10}$" [(ngModel)]="currentPatient.adressDto.postalCode" name="postalCode" required #postalModel="ngModel" class="form-control">
+                  <div class="field-error" *ngIf="postalModel.invalid && postalModel.touched">
+                    <span *ngIf="postalModel.errors?.['required']">Le code postal est requis.</span>
+                    <span *ngIf="postalModel.errors?.['pattern']">Format de code postal invalide.</span>
+                  </div>
                 </div>
               </div>
               <div class="form-group form-full-width">
                 <label for="country">Pays:</label>
-                <input id="country" [(ngModel)]="currentPatient.adressDto.country" name="country" required class="form-control">
+                <input id="country" [(ngModel)]="currentPatient.adressDto.country" name="country" required #countryModel="ngModel" class="form-control">
+                <div class="field-error" *ngIf="countryModel.invalid && countryModel.touched">Le pays est requis.</div>
               </div>
 
               <div class="form-actions">
@@ -840,6 +861,29 @@ import { PatientHistoryModalComponent } from '../medecin/patient-history-modal.c
         padding: 2rem 1.5rem !important;
     }
 
+    /* ------------------------------ Form Validation ------------------------------ */
+    .field-error {
+      color: var(--color-danger);
+      font-size: 0.85rem;
+      margin-top: 0.4rem;
+      display: block;
+    }
+
+    .field-error span {
+      display: block;
+      margin: 0.2rem 0;
+    }
+
+    .form-control:invalid {
+      border-color: var(--color-danger);
+      background-color: #fff5f5;
+    }
+
+    .form-control:valid:not(:placeholder-shown) {
+      border-color: var(--color-success);
+      background-color: #f5fff8;
+    }
+
     /* ------------------------------ Mobile Responsive ------------------------------ */
   @media (max-width: 992px) {
     .dashboard-container {
@@ -950,6 +994,8 @@ export class PatientsComponent implements OnInit {
   selectedPatient: Patient | null = null;
   isSidebarOpen: boolean = false;
   loggedUser: any = null;
+  // maxDate used to prevent selecting a future birth date
+  maxDate: string = this.getTodayString();
 
   constructor(
     private patientService: PatientService,
@@ -959,6 +1005,15 @@ export class PatientsComponent implements OnInit {
     private router: Router,
     private exportService: ExportService
   ) {}
+
+  // Returns today's date in YYYY-MM-DD format for HTML date max attribute
+  getTodayString(): string {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  }
 
   ngOnInit(): void {
 
